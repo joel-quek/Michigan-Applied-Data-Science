@@ -9,3 +9,4 @@ b = np.array( [ [1,2,3], [4,5,6] ] )
 print(b.shape) # this returns the dimensions of the matrix which is row x column
 print (b.ndim) # this returns the dimentions only which is 2-dim
 
+a.dtype # return the type of the data
