@@ -18,16 +18,17 @@ nbadf2['Area and NBA Team'] = nbadf2['Area and NBA Team'].str.rstrip()
 
 nbadf2['NBA Team']=nbadf2['Area and NBA Team'].str.extract('([0-9]*[0-9]*[A-Z]*[a-z]+$)') #create a column for team names
 
-# print(nbadf2) #code works up till this step
-# print(len(nbadf2))
+#print(nbadf2) # nbadf2 output is correct
+#print(len(nbadf2))
 # ---------------------------------------------------------------------------------------------------------------------------------------
 cities2 = cities[["Metropolitan area", "Population (2016 est.)[8]", "NBA"]]
-cities2=cities2[cities2['NBA'].str.contains('^[a-zA-Z]', regex=True)] #this means I am pulling out data that starts with letters. So i exclude those data eg. [note 25]
+cities2=cities2[cities2['NBA'].str.contains('^[0-9a-zA-Z]', regex=True)] #this means I am pulling out data that starts with letters (AND numbers cos of 76ers). So i exclude those data eg. [note 25]
 cities2['NBA'] = cities2['NBA'].str.replace('\[.*\]$','',regex=True) # remove square parentheses like [note 25] and join names together
 cities2.sort_values('Metropolitan area', ascending=True)
 cities2.rename(columns={'Population (2016 est.)[8]':'Population', 'Metropolitan area':'Area', 'NBA':'NBA Team'}, inplace=True)
 # important line
-teams = cities2['NBA Team'].str.extract('([A-Z]{0,2}[a-z0-9]*\ [A-Z]{0,2}[a-z0-9]*|[A-Z]{0,2}[a-z0-9]*)([A-Z]{0,2}[a-z0-9]*\ [A-Z]{0,2}[a-z0-9]*|[A-Z]{0,2}[a-z0-9]*)([A-Z]{0,2}[a-z0-9]*\ [A-Z]{0,2}[a-z0-9]*|[A-Z]{0,2}[a-z0-9]*)')
+teams = cities2['NBA Team'].str.extract('(\w{0,1}[a-z0-9]*\ \w{0,1}[a-z0-9]*|\w{0,1}[a-z0-9]*)(\w{0,1}[a-z0-9]*\ \w{0,1}[a-z0-9]*|\w{0,1}[a-z0-9]*)(\w{0,1}[a-z0-9]*\ \w{0,1}[a-z0-9]*|\w{0,1}[a-z0-9]*)')
+
 teams[['Area']] = cities2[['Area']]
 teams = teams.melt(id_vars='Area').drop(columns=['variable']).replace("",np.nan).replace("—",np.nan).dropna().rename(columns={"value":"NBA Team"})
 
@@ -39,23 +40,22 @@ teams = pd.merge(teams, cities2, how='left', on = 'Area')
 teams = teams[['Area', 'NBA Team_x', 'Population']]
 teams.rename(columns={'NBA Team_x':'NBA Team'}, inplace=True)
 
-print(teams)
-print(len(teams))
-
+#print(teams) # teams output is correct
+#print(len(teams))
+#-------------------------------------------------------------------------------------------------------------------------------------------
 combined=pd.merge(teams, nbadf2, 'outer', on='NBA Team').dropna()
-print(combined)
-print(len(combined)) # why 29 rows and not 28
-'''
+
 #combined=combined.groupby('Area').agg({'WLRatio': np.nanmean, 'Population': np.nanmean}) #aggregate data of repeated regions by taking average
-combined=combined.drop(columns=['NHL Team','Area and NHL Team'])
+combined=combined.drop(columns=['NBA Team','Area and NBA Team'])
 combined=combined.sort_values(by='Area')
 combined=combined.astype({'Population': int})
-combined=combined.groupby('Area').agg({'WLRatio': np.nanmean, 'Population': np.nanmean}) # los angeles and new york populations are not averaged
+combined=combined.astype({'W/L%': float})
+combined=combined.groupby('Area').agg({'W/L%': np.nanmean, 'Population': np.nanmean}) # los angeles and new york populations are not averaged
+
 print(combined)
-print(len(combined))
+print(len(combined)) # combined dataframe output is correct
 
 population_by_region = combined['Population'] # pass in metropolitan area population from cities
-win_loss_by_region = combined['WLRatio'] # pass in win/loss ratio from nhl_df in the same order as cities["Metropolitan area"]
+win_loss_by_region = combined['W/L%'] # pass in win/loss ratio from nhl_df in the same order as cities["Metropolitan area"]
 
-# print(stats.pearsonr(population_by_region, win_loss_by_region)[0])
-'''
+print(stats.pearsonr(population_by_region, win_loss_by_region)[0])
