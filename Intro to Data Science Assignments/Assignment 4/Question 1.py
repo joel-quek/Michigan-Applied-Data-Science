@@ -32,7 +32,7 @@ cities2.sort_values('Metropolitan area', ascending=True)
 cities2.rename(columns={'Population (2016 est.)[8]':'Population', 'Metropolitan area':'Area', 'NHL':'NHL Team'}, inplace=True)
 # important line
 # teams = cities2['NHL Team'].str.extract('([A-Z]*[a-z0-9]*)([A-Z]*[a-z0-9]*)([A-Z]*[a-z0-9]*)') # separating team names that are stuck together (eg 'KingsDucks') and creating a new pandas dataframe
-teams = cities2['NHL Team'].str.extract('([A-Z]{0,2}[a-z0-9]*\ [A-Z]{0,2}[a-z0-9]*|[A-Z]{0,2}[a-z0-9]*)([A-Z]{0,2}[a-z0-9]*\ [A-Z]{0,2}[a-z0-9]*|[A-Z]{0,2}[a-z0-9]*)([A-Z]{0,2}[a-z0-9]*\ [A-Z]{0,2}[a-z0-9]*|[A-Z]{0,2}[a-z0-9]*)')
+teams = cities2['NHL Team'].str.extract('(\w{0,1}[a-z0-9]*\ \w{0,1}[a-z0-9]*|\w{0,1}[a-z0-9]*)(\w{0,1}[a-z0-9]*\ \w{0,1}[a-z0-9]*|\w{0,1}[a-z0-9]*)(\w{0,1}[a-z0-9]*\ \w{0,1}[a-z0-9]*|\w{0,1}[a-z0-9]*)')
 
 teams[['Area']] = cities2[['Area']]
 teams = teams.melt(id_vars='Area').drop(columns=['variable']).replace("",np.nan).replace("—",np.nan).dropna().rename(columns={"value":"NHL Team"})
