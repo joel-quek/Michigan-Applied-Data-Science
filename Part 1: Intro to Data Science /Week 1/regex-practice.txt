@@ -1,0 +1,71 @@
+Regex Questions
+Congratulations! You have reached the end of the practice session. Here are the answers for the test questions:
+Answer for Question 1
+What does pattern \w mean?
+
+ A. Any lowercase letter
+ B. Any lowercase or uppercase letter
+ C. Any lowercase or uppercase letter, or underscore ANS
+ D. A word consisting of uppercase or lowercase letters
+
+Answer for Question 2
+Which one of the following patterns should I use to treat "123" as a group, but not make re.findall only return the content in the group?
+
+ A. [123]
+ B. [^123]
+ C. (123)
+ D. (?:123) ANS
+https://stackoverflow.com/questions/10804732/difference-between-and 
+
+Answer for Question 3
+Which of the following options will the regular expression ^X-.*: [0-9.]+ match?
+
+ A. X-DSPAM-Probability: Accurate
+ B. X-DSPAM-Confidence: 0.8475 ANS
+ C. X Wolverine-Confidence: 0.53
+ D. X-Wolverine-Confidence: 1 ANS
+
+Answer for Question 4
+Which of the following options will the following regular expression match?
+
+\w{2} \d{5}(\(\d{4}\)|-\d{4})
+
+ A. MI 12345 6789
+ B. MI 12345-6789 ANS
+ C. MI 12345(6789) ANS
+ D. MI 12345-(6789)
+
+Answer for Question 5
+What is the correct regular expression to match a URL with letters, numbers, underscores and dots? A valid URL defined in this problem must meet the following requirements:
+
+The URL consists of two or more strings made of letters, numbers, and underscores.
+A dot is used in between the strings.
+No two dots are allowed to appear consecutively.
+For example, your regex should match URLs like: www.aBC.com, abc.com, ab_c.de8f.com
+But your regex should not match: abc, abc..com
+
+One possible solution:
+(\w+\.)+\w+
+
+
+Answer for Question 6
+What is the correct regular expression to match an ISBN number from two publishers (World Scientific from Singapore, and Sigma Publications from Greece)? A valid ISBN code defined in this problem must meet the following requirements:
+
+The ISBN number consists of 10 digits, with dashes(-) in between.
+The ISBN number must match the patterns of one of the following publishers(x means a digit from 0 to 9): for World Scientific, the pattern should be xxxx-x-xxxx-x, and for Sigma Publications, the pattern should be xxx-xxx-xxx-x.
+For example, your regex should match ISBNs like: 9971-5-0210-0, 960-425-059-0
+
+One possible solution:
+\d{4}-\d-\d{4}-\d|\d{3}-\d{3}-\d{3}-\d
+
+
+Answer for Question 7
+What is the correct regular expression to match a DOI registered by Crossref? A valid DOI(e.g. doi:10.1038/nphys1170) defined in this problem must meet the following requirements:
+
+The DOI starts with doi:
+The link has two parts divided by a “/”. In the first part, there can only be numbers and dots, and in the second part, there can be any characters. There should be at least one character in each part.
+For example, your regex should match DOIs like: doi:10.1038/nphys1170, doi:10.1002/0470841559.ch1
+
+One possible solution:
+doi:[\d.]+/.+
+
